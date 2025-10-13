@@ -25,6 +25,12 @@ jobs:
 
       - name: Compilar a aplicação
         run: dotnet build --configuration Release --no-restore
+
+      - name: Exportar artefatos de build
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifacts
+          path: ./output
        
    test:
       name: Testes
@@ -45,5 +51,3 @@ jobs:
             uses: actions/checkout@v3
           - name: Implantação da aplicação
             run: echo "Implatando o sistema em produção..."
-
-
