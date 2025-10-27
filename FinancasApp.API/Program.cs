@@ -1,5 +1,7 @@
-using Scalar.AspNetCore;
+using FinancasApp.API.Middlewares;
+using FinancasApp.Domain.Extensions;
 using FinancasApp.Infra.Data.Extensions;
+using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,8 +17,12 @@ builder.Services.AddSwaggerGen();
 
 //Métodos de extensão
 builder.Services.AddEntityFramework(builder.Configuration);
+builder.Services.AddDomainService();
 
 var app = builder.Build();
+
+//Middlewares
+app.UseMiddleware<ExceptionMiddleware>();
 
 // Configure the HTTP request pipeline.
 app.MapOpenApi();

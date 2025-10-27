@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace FinancasApp.Domain.Mappings
 {
@@ -19,10 +18,24 @@ namespace FinancasApp.Domain.Mappings
         public ProfileMap()
         {
             CreateMap<CategoriaRequest, Categoria>();
-            CreateMap<MovimentacaoRequest, Movimentacao>();
+
+            CreateMap<MovimentacaoRequest, Movimentacao>()
+                .ForMember(dest => dest.Data,
+                            opt => opt.MapFrom(src => DateOnly.Parse(src.Data)))
+                .ForMember(dest => dest.Tipo,
+                            opt => opt.MapFrom(src => (TipoMovimentacao)src.Tipo));
 
             CreateMap<Categoria, CategoriaResponse>();
-            CreateMap<Movimentacao, MovimentacaoResponse>();
+
+            CreateMap<Movimentacao, MovimentacaoResponse>()
+                  .ForMember(dest => dest.Data,
+                              opt => opt.MapFrom(src => src.Data.HasValue
+                                    ? src.Data.Value.ToString("yyyy-MM-dd")
+                                    : string.Empty))
+                  .ForMember(dest => dest.Tipo,
+                              opt => opt.MapFrom(src => src.Tipo.HasValue
+                                   ? (int)src.Tipo.Value
+                                   : 0));
         }
     }
 }
